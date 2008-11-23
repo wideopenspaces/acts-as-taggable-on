@@ -21,7 +21,7 @@ module ActiveRecord
             tag_type = tag_type.to_s
             self.class_eval do
               has_many "#{tag_type.singularize}_taggings".to_sym, :as => :taggable, :dependent => :destroy, 
-                :include => :tag, :conditions => ["context = ?",tag_type], :class_name => "Tagging"
+                :include => :tag, :conditions => ["#{Tagging.table_name}.context = ?",tag_type], :class_name => "Tagging"
               has_many "#{tag_type}".to_sym, :through => "#{tag_type.singularize}_taggings".to_sym, :source => :tag
             end
             
@@ -128,7 +128,7 @@ module ActiveRecord
           conditions << sanitize_sql(options.delete(:conditions)) if options[:conditions]
           
           unless (on = options.delete(:on)).nil?
-            conditions << sanitize_sql(["context = ?",on.to_s])
+            conditions << sanitize_sql(["#{Tagging.table_name}.context = ?",on.to_s])
           end
 
           taggings_alias, tags_alias = "#{table_name}_taggings", "#{table_name}_tags"
@@ -237,10 +237,10 @@ module ActiveRecord
         
         def tags_on(context, owner=nil)
           if owner
-            opts = {:conditions => ["context = ? AND tagger_id = ? AND tagger_type = ?",
+            opts = {:conditions => ["#{Tagging.table_name}.context = ? AND tagger_id = ? AND tagger_type = ?",
                                     context.to_s, owner.id, owner.class.to_s]}
           else
-            opts = {:conditions => ["context = ?", context.to_s]}
+            opts = {:conditions => ["#{Tagging.table_name}.context = ?", context.to_s]}
           end
           base_tags.find(:all, opts)
         end
