@@ -70,9 +70,10 @@ class TagList < Array
   class << self
     # Returns a new TagList using the given tag string.
     # 
-    #   tag_list = TagList.from("One , Two,  Three")
+    #   tag_list = TagList.from("One , Two,  Three")** or tag_list = TagList.from(["One", "Two", "Three"])
     #   tag_list # ["One", "Two", "Three"]
     def from(string)
+      return new(tags) if tags.is_a? Array
       returning new do |tag_list|
         string = string.to_s.dup
         
