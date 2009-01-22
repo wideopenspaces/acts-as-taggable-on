@@ -1,3 +1,7 @@
+== 2009-01-21
+
+* Added counter cache for taggings on tag (Tag#tag_count) (wideopenspaces)
+
 == 2008-07-17
 
 * Can now use a named_scope to find tags!
